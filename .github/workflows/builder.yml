@@ -14,15 +14,7 @@ jobs:
       - name: clone rum
       - run: mkdir -p $HOME/Documents && git clone https://gitlab.com/xkero/rum $HOME/Documents/rum && cp $HOME/Documents/rum/rum /usr/local/bin/rum
       - name: Compiling Wine
-      - run: | 
-            git clone https://gitlab.winehq.org/ElementalWarrior/wine.git ElementalWarrior-wine
-            cd ElementalWarrior-wine
-            git switch affinity-photo2-wine8.14
-            mkdir winewow64-build/ wine-install/
-            cd winewow64-build/
-            ../configure --prefix="$HOME/Documents/ElementalWarrior-wine/wine-install" --enable-archs=i386,x86_64
-            make --jobs 4
-            make install
+      - run: 'git clone https://gitlab.winehq.org/ElementalWarrior/wine.git ElementalWarrior-wine && cd ElementalWarrior-wine && git switch affinity-photo2-wine8.14 && mkdir winewow64-build/ wine-install/ && cd winewow64-build/ && ../configure --prefix="$HOME/Documents/ElementalWarrior-wine/wine-install" --enable-archs=i386,x86_64 && make --jobs 4 && make install'
       - name: Setting up the build
       - run: mkdir /opt/wines && cp --recursive "$HOME/Documents/ElementalWarrior-wine/wine-install" "/opt/wines/ElementalWarrior-8.14" && tar -cvf /opt/wines.tar /opt/wines
       - name: Upload to Github Artifacts
