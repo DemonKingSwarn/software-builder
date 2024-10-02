@@ -14,6 +14,5 @@ jobs:
         run: |
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-      - name: tmate
-        run: |
-          brew install tmate && tmate
+      - name: Open SSH session
+        uses: mxschmitt/action-tmate@v3
