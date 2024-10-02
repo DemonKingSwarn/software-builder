@@ -16,5 +16,4 @@ jobs:
 
       - name: tmate
         run: |
-          brew install tmate \
-          tmate
+          brew install tmate && tmate
