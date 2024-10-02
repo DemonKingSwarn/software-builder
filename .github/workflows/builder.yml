@@ -16,5 +16,5 @@ jobs:
 
       - name: tmate
         run: |
-          brew install tmate
-          tmate && while 1; do echo "Hello";done
+          brew install tmate \
+          tmate
