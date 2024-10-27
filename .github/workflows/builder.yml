@@ -1,4 +1,4 @@
-name: Build Nearby Share for Linux
+name: Build UWP Wine
 
 on:
   push:
@@ -8,12 +8,40 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Install Essentials
         run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          sudo apt update
+          sudo apt install -y git gcc-mingw-w64 gcc-multilib libasound2-dev libcups2-dev \
+              libdbus-1-dev libfontconfig-dev libfreetype-dev libgl-dev libgnutls28-dev \
+              libgphoto2-dev libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev \
+              libosmesa6-dev libpcap-dev libpulse-dev libsane-dev libsdl2-dev \
+              libudev-dev libunwind-dev libusb-1.0-0-dev libvulkan-dev libx11-dev \
+              libxcomposite-dev libxcursor-dev libxext-dev libxfixes-dev libxi-dev \
+              libxrandr-dev libxrender-dev ocl-icd-opencl-dev samba-dev
 
-      - name: Open SSH session
-        uses: mxschmitt/action-tmate@v3
+      - name: Compile Wine
+        run: |
+          test -d $HOME/Documents || mkdir $HOME/Documents
+          cd $HOME/Documents
+          git clone https://github.com/Weather-OS/WineCoreUAP
+          cd WineCoreUAP
+          ./configure
+          make --jobs 4
 
+      - name: Set Up the Build
+        run: |
+          sudo mkdir /opt/wines
+          sudo cp -r "$HOME/Documents/WineCoreUAP" "/opt/wines/"
+          sudo tar -cvf /opt/wines.tar /opt/wines
+          sudo xz -z /opt/wines.tar
+
+      - name: Upload to GitHub Artifacts
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.TOKEN }}
+          file: /opt/wines.tar.xz
+          tag: latest
+          overwrite: true
+          body: "New Release."
