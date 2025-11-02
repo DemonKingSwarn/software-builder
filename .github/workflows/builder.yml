@@ -25,15 +25,15 @@ jobs:
         run: |
           test -d $HOME/Documents || mkdir $HOME/Documents
           cd $HOME/Documents
-          git clone https://github.com/Weather-OS/WineCoreUAP
-          cd WineCoreUAP
+          git clone https://github.com/Weather-OS/WineGDK
+          cd WineGDK
           ./configure
-          make --jobs 4
+          make -j4
 
       - name: Set Up the Build
         run: |
           sudo mkdir /opt/wines
-          sudo cp -r "$HOME/Documents/WineCoreUAP" "/opt/wines/"
+          sudo cp -r "$HOME/Documents/WineGDK" "/opt/wines/"
           sudo tar -cvf /opt/wines.tar /opt/wines
           sudo xz -z /opt/wines.tar
 
